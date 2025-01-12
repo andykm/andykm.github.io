@@ -1,7 +1,11 @@
 # About Me
 
 ## 🎓 Current Master's Student  
-I am currently pursuing a Master's degree in Cybersecurity with a focus on Networking at the Universiti of Malaya. My academic journey has allowed me to gain a deep understanding of cybersecurity principles, complemented by practical expertise in networking and security operations.
+I am currently pursuing a Master's degree in Cybersecurity with a focus on Networking at the Universiti of Malaya. My academic journey has provided me with a deep understanding of cybersecurity principles, complemented by hands-on expertise in networking and security operations.
+
+I am enhancing my knowledge in networking fundamentals, with a focus on routing, switching, and internetworking technologies. Leveraging platforms such as Cisco, Open vSwitch, GNS3, and Packet Tracer, I am building and analyzing complex network environments, complemented by the use of Virtual Machines for practical simulations.
+
+My learning journey extends into network security, where I am utilizing industry-standard tools like Nmap, Scapy, Shodan, Metasploit, and Wireshark for traffic analysis, vulnerability assessments, and threat detection. I am also exploring advanced security concepts, including ARP spoofing, DHCP starvation attacks, and the application of Machine Learning in Intrusion Detection Systems
 
 ---
 
