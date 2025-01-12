@@ -6,7 +6,7 @@ I am currently pursuing a Master's degree in Cybersecurity with a focus on Netwo
 ---
 
 ## 🛡️ Professional Experience in SOC Operations  
-With extensive experience in Security Operations Center (SOC) environments, I have developed a comprehensive skill set in the following areas:  
+With some experience in Security Operations Center (SOC) environments, I have developed a comprehensive skill set in the following areas:  
 - Monitoring and managing security events on customer and internal platforms through SIEM solutions.  
 - Detecting, qualifying, alerting, and managing security incidents efficiently.  
 - Installing, configuring, and administering a wide range of security solutions.  
