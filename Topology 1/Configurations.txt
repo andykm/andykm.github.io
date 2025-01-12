@@ -1,0 +1,662 @@
+---pa-4T+ is serial ports
+
+[Router]
+add slot for serial -  pa-4T+ x2
+change slot0 to ge-e
+
+[switch]
+add nm-16esw module
+
+[ipv4/ipv6 addressing]
+VLAN10 - 192.168.119.0/24 ; 2001:db8:111:119::/64
+VLAN20 - 192.168.219.0/24 ; 2001:db8:111:219::/64
+VLAN30 - 192.161.9.0/24 ; 2001:db8:111:319::/64
+
+serial link R1 - R2
+10.10.12.0/30 ; 2001:db8:111:1122::/64
+
+
+R1 - 
+vlan10 - ip address 192.168.119.1
+vlan20 - ip address 192.168.219.1
+
+R2-
+Ip via dhcp toolbox3 [should be 172.161.9.1]
+
+toolbox3-
+static ip for eth0 - 172.161.9.10
+
+-----------------------[IPV4 configurations]-----------------------------------
+[configure switch esw1 and esw2]
+--ESW1--
+[vlan 10]
+config t
+vlan 10
+name VLAN10
+do write
+exit
+
+vlan 20
+name VLAN20
+do write
+exit
+
+interface e2/0
+switchport mode access
+switchport access vlan 10
+duplex full
+no shutdown
+do write
+exit
+
+interface e2/1
+switchport mode access
+switchport access vlan 20
+duplex full
+no shutdown
+do write
+exit
+
+interface e1/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+duplex full
+no shutdown
+do write
+exit
+
+interface e1/1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+duplex full
+no shutdown
+do write
+exit
+
+[shutdown unused port]
+interface range e0/0 - 3
+shutdown
+
+interface range e1/2 - 3
+shutdown
+
+interface range e2/2 - 3
+shutdown
+
+interface range e3/0 - 3
+shutdown
+
+--check status--
+show vlan-switch or show vlan
+show interface status
+show ip interface brief
+
+--ESW2--
+[vlan 10]
+config t
+vlan 10
+name VLAN10
+do write
+exit
+
+[vlan 20]
+vlan 20
+name VLAN20
+do write
+exit
+
+interface e2/0
+switchport mode access
+switchport access vlan 10
+duplex full
+no shutdown
+do write
+exit
+
+interface e2/1
+switchport mode access
+switchport access vlan 20
+duplex full
+no shutdown
+do write
+exit
+
+interface e1/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+duplex full
+no shutdown
+do write
+exit
+
+[shutdown unused port]
+interface range e0/0 - 3
+shutdown
+
+interface range e1/1 - 3
+shutdown
+
+interface range e2/2 - 3
+shutdown
+
+interface range e3/0 - 3
+shutdown
+
+
+--check status--
+show vlan-switch or show vlan
+show interface status
+show ip interface brief
+
+[Configure router 1]
+--dhcp--
+config t
+ip dhcp pool VLAN10
+network 192.168.119.0 255.255.255.0 
+default-router 192.168.119.1 
+do write
+exit
+
+ip dhcp pool VLAN20
+network 192.168.219.0 255.255.255.0 
+default-router 192.168.219.1 
+do write
+exit
+
+ip dhcp excluded-address 192.168.119.1
+ip dhcp excluded-address 192.168.219.1
+
+--ROAS--
+interface g0/0.10
+encapsulation dot1Q 10  
+ip address 192.168.119.1 255.255.255.0
+no shutdown  
+do write
+exit
+
+interface g0/0.20
+encapsulation dot1Q 20  
+ip address 192.168.219.1 255.255.255.0  
+no shutdown
+do write
+exit
+
+interface g0/0
+no shutdown
+do write
+
+--check status--
+show ip interface brief
+
+[PC1]
+ip dhcp
+show ip
+[PC2]
+ip dhcp
+[toolbox-1]
+/gns3/bin/udhcpc
+ifconfig
+[toolbox-2]
+/gns3/bin/udhcpc
+
+[alpine Linux]
+/bin/busybox udhcpc
+
+--check dhcp status--
+show ip dhcp pool
+show ip dhcp binding
+
+--test--
+check if all devices can ping each other + gateway
+
+[Configuration ESW3]
+config t
+vlan 30
+name VLAN30
+do write
+exit
+
+interface range e2/0
+switchport mode access
+switchport access vlan 30
+do write
+exit
+
+interface range e1/1-3
+switchport mode access
+switchport access vlan 30
+do write
+exit
+
+[shutdown unused port]
+interface range e0/0 - 3
+shutdown
+
+interface range e1/0
+shutdown
+
+interface range e2/1 - 3
+shutdown
+
+interface range e3/0 - 3
+shutdown
+
+[configuration toolbox-3 dhcp server]
+--Assign a Static IP to Toolbox-3 for vlan 30--
+
+
+ip addr add 172.161.9.10/24 dev eth0
+ip link set eth0 up
+
+or configure
+
+nano /etc/network/interfaces
+
+--uncomment--
+auto eth0
+iface eth0 inet static
+    address 172.161.9.10  
+    netmask 255.255.255.0  
+    gateway 172.161.9.1  - normally this would be the ip requested by the router but its supposed to be x.x.x.1  
+
+--Edit the DHCP Configuration File (/etc/dhcp/dhcpd.conf) on Toolbox-3 to serve addresses in the VLAN 30 subnet--
+
+nano /etc/default/isc-dhcp-server
+INTERFACESv4="eth0"
+INTERFACESv6="eth0"
+
+nano /etc/dhcp/dhcpd.conf
+Add the following configuration:
+
+subnet 172.161.9.0 netmask 255.255.255.0 {
+    range 172.161.9.20 172.161.9.100;  # DHCP range for PC3 and other clients
+    option subnet-mask 255.255.255.0;
+    option routers 172.161.9.1;
+    default-lease-time 3600;
+    max-lease-time 7200;
+}
+
+[mac address r2 - show interface g0/0 ca02.b129.0008  => ca:02:b1:29:00:08]
+
+host R2 {
+  hardware ethernet ca:02:b1:29:00:08;
+  fixed-address 172.161.9.1;
+}
+
+[launch server]
+--if error file missing--
+mkdir -p /var/lib/dhcp
+touch /var/lib/dhcp/dhcpd.leases
+chown dhcpd:dhcpd /var/lib/dhcp/dhcpd.leases
+touch /var/lib/dhcp/dhcpd6.leases
+chown dhcpd:dhcpd /var/lib/dhcp/dhcpd6.leases
+
+rm /var/lib/duck/dhcpd.leases
+cat /var/lib/dhcp/dhcpd.leases
+
+--launch server-- 
+dhcpd or /etc/init.d/isc-dhcp-server start
+
+[testing automatic creation of file through crontab busybox]
+
+mkdir -p /var/spool/cron/crontabs        /var/spool/cron/crontabs/root
+
+c [through busybox]
+add line =
+
+@reboot (rm -f /var/lib/dhcp/dhcpd.leases && touch /var/lib/dhcp/dhcpd.leases && chmod 644 /var/lib/dhcp/dhcpd.leases && chown dhcpd:dhcpd /var/lib/dhcp/dhcpd.leases)
+@reboot /usr/sbin/dhcpd
+esc -> :wq
+
+[R2]
+config t
+interface g0/0
+ip address dhcp
+no shutdown
+do write
+
+show ip interface brief
+
+[PC3]
+ip dhcp
+show ip
+
+[to check lease on toolbox 3]
+cat /var/lib/dhcp/dhcpd.leases
+
+--test---
+ping devices + gateway
+
+
+[configure static routing r1 - r2]
+--r1--
+config t
+interface s2/0
+ip address 10.10.12.1 255.255.255.0 
+no shutdown
+do write
+
+
+ip route 172.161.9.0 255.255.255.0 10.10.12.2 [so2 ip] # to test ip route 172.161.0.0 255.255.0.0 192.168.1.2
+
+do write
+
+show ip route
+
+--r2--
+config t
+interface s2/0
+ip address 10.10.12.2 255.255.255.0 
+no shutdown
+do write
+
+ip route 192.168.119.0 255.255.255.0 10.10.12.1 [so1 ip]  no ip route 192.168.119.0 255.255.255.0 192.168.1.1
+ip route 192.168.219.0 255.255.255.0 10.10.12.1 [so1 ip]  no ip route 192.168.219.0 255.255.255.0 192.168.1.1
+
+do write
+
+show ip route
+
+--test connections--
+show 
+
+[ssh configuration]
+
+--R1--
+ip domain-name r1.com
+username admin privilege 15 secret admin
+crypto key generate rsa
+ip ssh version 2
+line vty 0 4 [number of allowable sessions simultaenously]
+login local
+transport input ssh
+do write
+
+show running-config | include ssh
+
+-test-
+[from esw1]
+ssh -l admin 192.168.119.1
+ssh -l admin 192.168.219.1
+
+[from toolbox]
+ssh -oKexAlgorithms=+diffie-hellman-group14-sha1 -oCiphers=aes128-cbc admin@192.168.219.1
+ssh -oKexAlgorithms=+diffie-hellman-group14-sha1 -oCiphers=aes128-cbc admin@192.168.119.1
+
+if error message about change of host
+
+ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.219.1"
+ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.119.1"
+
+--ESW1--
+config t
+interface vlan 10
+ip address 192.168.119.10 255.255.255.0
+ip default-gateway 192.168.119.1
+do write
+no shutdown
+exit
+
+interface vlan 20
+ip address 192.168.219.10 255.255.255.0
+ip default-gateway 192.168.219.1
+do write
+no shutdown
+exit
+
+
+ip domain-name esw1.com
+username admin privilege 15 secret admin
+crypto key generate rsa
+ip ssh version 2
+line vty 0 4 [number of allowable sessions simultaenously]
+login local
+transport input ssh
+do write
+
+
+show running-config | include ssh
+
+---test---
+[from toolbox in subnet]
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=aes128-cbc admin@192.168.219.10
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=aes128-cbc admin@192.168.119.10
+
+ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.219.10"
+ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.119.10"
+
+
+[from router]
+ssh -l admin 192.168.119.10
+ssh -l admin 192.168.219.10
+
+--ESW2-=
+interface vlan 10
+ip address 192.168.119.11 255.255.255.0
+ip default-gateway 192.168.119.1
+do write
+
+interface vlan 10
+no shutdown
+exit
+
+interface vlan 20
+ip address 192.168.219.11 255.255.255.0
+ip default-gateway 192.168.219.1
+do write
+
+interface vlan 20
+no shutdown
+exit
+
+ip domain-name esw2.com
+username admin privilege 15 secret admin
+crypto key generate rsa
+ip ssh version 2
+line vty 0 4 [number of allowable sessions simultaenously]
+login local
+transport input ssh
+do write
+
+show running-config | include ssh
+
+---test---
+[from router]
+ssh -l admin 192.168.119.11
+ssh -l admin 192.168.219.11
+
+[from esw1]
+ssh -l admin 192.168.119.11
+ssh -l admin 192.168.219.11
+
+[from toolbox]
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=aes128-cbc admin@192.168.219.11
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=aes128-cbc admin@192.168.119.11
+
+ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.219.11"
+ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.119.11"
+
+
+--ESW3--
+interface vlan 30
+ip address 172.161.9.11 255.255.255.0
+ip default-gateway 171.161.9.1
+do write
+no shutdown
+exit
+
+ip domain-name esw3.com
+username admin privilege 15 secret admin
+crypto key generate rsa
+ip ssh version 2
+line vty 0 4 [number of allowable sessions simultaenously]
+login local
+transport input ssh
+do write
+
+show running-config | include ssh
+
+--test--
+[from toolbox in subnet]
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -oCiphers=aes128-cbc admin@172.161.9.11
+
+ssh-keygen -f "/root/.ssh/known_hosts" -R "172.161.9.11"
+
+[from router]
+ssh -l admin 172.161.9.11
+
+--R2--
+ip domain-name r2.com
+username admin privilege 15 secret admin
+crypto key generate rsa
+ip ssh version 2
+line vty 0 4 [number of allowable sessions simultaenously]
+login local
+transport input ssh
+do write
+
+show running-config | include ssh
+
+--test--
+[from toolbox in subnet]
+ssh -oKexAlgorithms=+diffie-hellman-group14-sha1 -oCiphers=aes128-cbc admin@172.161.9.1
+
+ssh-keygen -f "/root/.ssh/known_hosts" -R "172.161.9.1"
+
+[from ESW3]
+ssh -l admin 172.161.9.1
+
+
+-----------------
+no ip routing -  on switches
+
+alpine Linux 
+/bin/busybox udhcpc
+
+/bin/busybox udhcpc6
+
+------------------------------[IPV6 configurations]-------------------------------------------------
+
+vlan 10 - 2001:db8:111:119::/64
+vlan 20 - 2001:db8:111:219::/64
+vlan 30 - 2001:db8:111:319::/64
+
+--------------[R1]-------------------
+conf t
+ipv6 unicast-routing
+
+ipv6 dhcp pool VLAN10
+address prefix 2001:db8:111:119::/64  # VLAN 10 subnet
+do write
+
+ipv6 dhcp pool VLAN20
+address prefix 2001:db8:111:219::/64  # VLAN 20 subnet
+do write
+
+
+interface gigabitEthernet 0/0.10
+ipv6 address 2001:db8:111:119::1/64  # Gateway address for VLAN 10
+ipv6 nd managed-config-flag  # Enable Stateful DHCPv6
+ipv6 dhcp server VLAN10
+ipv6 enable
+do write
+no shutdown
+
+interface gigabitEthernet 0/0.20
+ipv6 address 2001:db8:111:219::1/64  # Gateway address for VLAN 20
+ipv6 nd managed-config-flag  # Enable Stateful DHCPv6
+ipv6 dhcp server VLAN20
+ipv6 enable
+do write
+no shutdown
+
+show ipv6 interface brief
+show ipv6 dhcp pool
+
+[vpc] 
+ip auto
+show ipv6
+
+[alpine - toolbox]
+/bin/busybox udhcpc6
+
+[dhcpclient]
+dhclient -6
+
+cat /var/lib/dhcp/dhcpd6.leases
+
+-----------------[Dhcp6 server toolbox3]--------------------
+nano /etc/dhcp/dhcpd6.conf
+
+[ipv6 not compatible with mac address use duid instead - on R2 show ipv6 dhcp]
+
+duid r2 - 00030001CA02B1290006
+
+host R2 {
+    # This host entry is hopefully matched if the client supplies a DUID-LL
+    # or DUID-LLT containing this MAC address.
+    host-identifier option dhcp6.client-id 00:03:00:01:CA:02:B1:29:00:06;
+    fixed-address6 2001:db8:111:319::1; 
+}
+
+# The subnet where the server is attached
+# (i.e., the server has an address in this subnet)
+subnet6 2001:db8:111:319::/64 {
+    range6 2001:db8:111:319::2 2001:db8:111:319::ff; 
+    prefix6 2001:db8:111:319:: 2001:db8:111:319::/64;
+}
+
+    prefix6 2001:db8:111:319:: 2001:db8:111:319::/64;
+
+[configure eth0 for ipv6]
+
+nano /etc/network/interfaces
+
+iface eth0 inet6 static
+    address 2001:db8:111:319::10  # Your desired IPv6 address
+    netmask 64  # Subnet mask
+    gateway 2001:db8:111:319::1  # Default gateway (optional)
+
+
+
+---------------[R2]------------------------
+ipv6 unicast-routing
+interface g0/0
+ipv6 enable
+#ipv6 address dhcp
+ipv6 nd managed-config-flag
+ipv6 nd ra suppress
+#ipv6 address 2001:db8:111:319::1 
+ipv6 dhcp client pd PrefixPool
+ipv6 address PrefixPool ::1/64
+
+do write
+no shutdown
+
+---------------[static routing r1 - r2]------------------------
+
+--r1--
+config t
+interface s2/0
+ipv6 address 2001:db8:111:1122::1/64
+no shutdown
+do write
+
+
+ipv6 route 2001:db8:111:319::/64 2001:db8:111:1122::2 
+
+do write
+
+show ip route
+
+--r2--
+config t
+interface s2/0
+ipv6 address 2001:db8:111:1122::2/64
+no shutdown
+do write
+
+
+ipv6 route 2001:db8:111:119::/64 2001:db8:111:1122::1 
+ipv6 route 2001:db8:111:219::/64 2001:db8:111:1122::1 
+

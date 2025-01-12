@@ -1,0 +1,379 @@
+--------------Configure NAT for ubuntu guest----------------
+uncomment dhcp configuration
+apt update
+apt install ipcalc
+
+to add for persistence in advanced setting
+/bin 
+/boot 
+/dev 
+/etc 
+/gns3 
+/gns3volumes 
+/home 
+/lib 
+/lib64 
+/root 
+/sbin 
+/var 
+/usr
+
+
+----------------Determining subnets-------------------------------
+root@UbuntuDockerGuest-2:~# ipcalc 192.168.19.0/24 -s 100 60 20 20
+Address:   192.168.19.0         11000000.10101000.00010011. 00000000
+Netmask:   255.255.255.0 = 24   11111111.11111111.11111111. 00000000
+Wildcard:  0.0.0.255            00000000.00000000.00000000. 11111111
+=>
+Network:   192.168.19.0/24      11000000.10101000.00010011. 00000000
+HostMin:   192.168.19.1         11000000.10101000.00010011. 00000001
+HostMax:   192.168.19.254       11000000.10101000.00010011. 11111110
+Broadcast: 192.168.19.255       11000000.10101000.00010011. 11111111
+Hosts/Net: 254                   Class C, Private Internet
+
+1. Requested size: 100 hosts
+Netmask:   255.255.255.128 = 25 11111111.11111111.11111111.1 0000000
+Network:   192.168.19.0/25      11000000.10101000.00010011.0 0000000
+HostMin:   192.168.19.1         11000000.10101000.00010011.0 0000001
+HostMax:   192.168.19.126       11000000.10101000.00010011.0 1111110
+Broadcast: 192.168.19.127       11000000.10101000.00010011.0 1111111
+Hosts/Net: 126                   Class C, Private Internet
+
+2. Requested size: 60 hosts
+Netmask:   255.255.255.192 = 26 11111111.11111111.11111111.11 000000
+Network:   192.168.19.128/26    11000000.10101000.00010011.10 000000
+HostMin:   192.168.19.129       11000000.10101000.00010011.10 000001
+HostMax:   192.168.19.190       11000000.10101000.00010011.10 111110
+Broadcast: 192.168.19.191       11000000.10101000.00010011.10 111111
+Hosts/Net: 62                    Class C, Private Internet
+
+3. Requested size: 20 hosts
+Netmask:   255.255.255.224 = 27 11111111.11111111.11111111.111 00000
+Network:   192.168.19.192/27    11000000.10101000.00010011.110 00000
+HostMin:   192.168.19.193       11000000.10101000.00010011.110 00001
+HostMax:   192.168.19.222       11000000.10101000.00010011.110 11110
+Broadcast: 192.168.19.223       11000000.10101000.00010011.110 11111
+Hosts/Net: 30                    Class C, Private Internet
+
+4. Requested size: 20 hosts
+Netmask:   255.255.255.224 = 27 11111111.11111111.11111111.111 00000
+Network:   192.168.19.224/27    11000000.10101000.00010011.111 00000
+HostMin:   192.168.19.225       11000000.10101000.00010011.111 00001
+HostMax:   192.168.19.254       11000000.10101000.00010011.111 11110
+Broadcast: 192.168.19.255       11000000.10101000.00010011.111 11111
+Hosts/Net: 30                    Class C, Private Internet
+
+Needed size:  256 addresses.
+Used network: 192.168.19.0/24
+
+--------------------------------------
+[Subnet A [Vlan10]]
+Network:   192.168.19.0/25 
+Netmask:   255.255.255.128
+gateway should be 192.168.19.1
+[Subnet B [Vlan20]]
+Network:   192.168.19.128/26 
+Netmask:   255.255.255.192 
+gateway should be  192.168.19.129
+[Subnet C [Vlan30]]
+Network:   192.168.19.192/27
+Netmask:   255.255.255.224
+gateway should be  192.168.19.193
+[Subnet D [Vlan40]]
+Network:   192.168.19.224/27 
+Netmask:   255.255.255.224
+gateway should be  192.168.19.225
+
+----------------------------------------
+[configure openvswitch-1]
+
+ovs-vsctl add-br br0   # Creates the main Open vSwitch bridge (WARNING - use this if no br0)
+[WARNING - Then add each port if no port]
+ovs-vsctl add-port BR0 eth0
+ovs-vsctl add-port BR0 eth1
+ovs-vsctl add-port BR0 eth5
+ovs-vsctl add-port BR0 eth6
+ovs-vsctl add-port BR0 eth7
+
+For VLAN 10 (Subnet A) on eth1:
+ovs-vsctl set port eth1 tag=10
+
+For VLAN 20 (Subnet B) on eth5 and eth7:
+ovs-vsctl set port eth5 tag=20
+ovs-vsctl set port eth6 tag=20
+ovs-vsctl set port eth7 tag=20
+
+ovs-vsctl set port eth0 trunks=10,20
+
+ovs-vsctl save
+ovs-vsctl show
+
+-- emer-reset----                  reset configuration to clean state
+
+---------------------------------------
+[Configure r1 for dhcp, natcloud and ROAS]
+
+interface f0/0
+no ip address
+no shutdown
+
+interface f0/0.10
+encapsulation dot1Q 10
+ip address 192.168.19.1 255.255.255.128
+no shutdown
+
+interface f0/0.20
+encapsulation dot1Q 20
+ip address 192.168.19.129 255.255.255.192
+no shutdown
+
+ip dhcp pool VLAN10
+network 192.168.19.0 255.255.255.128
+default-router 192.168.19.1
+
+ip dhcp pool VLAN20
+network 192.168.19.128 255.255.255.192
+default-router 192.168.19.129
+
+interface f0/1
+ip address dhcp
+no shutdown
+exit
+
+ip name-server 8.8.8.8
+
+[to demo extended acl ping]
+[to exclude static ip address for dhcpclient 1 subnet A]
+ip dhcp excluded-address 192.168.19.2 192.168.19.2
+
+[to exclude static ip address for ubuntuguest 1 subnet b]
+ip dhcp excluded-address 192.168.19.133 192.168.19.133
+
+[to demo standard acl]
+[to exclude static ip address for dhcpclient 2  subnet b]
+ip dhcp excluded-address 192.168.19.130 192.168.19.130
+
+[Configure r2 for dhcp]
+interface f0/0
+ip address 192.168.19.193 255.255.255.224 
+no shutdown
+
+ip dhcp pool VLAN30
+network 192.168.19.192 255.255.255.224
+default-router 192.168.19.193
+
+[Configure r3 for dhcp]
+interface f0/0
+ip address 192.168.19.225 255.255.255.224 
+no shutdown
+exit
+
+ip name-server 8.8.8.8
+
+ip dhcp pool VLAN40
+network 192.168.19.224 255.255.255.224
+default-router 192.168.19.225
+
+[Configure ESW1]
+vlan 40
+name VLAN40
+exit
+
+interface range e1/0 - 1
+switchport mode access
+switchport access vlan 40
+exit
+
+--------------------------Configure EIGRP Routing----------------------------------
+
+Router(config)# router eigrp AS_number
+Router(config-router)# network network_address [wildcard_mask]
+
+To calculate the wildcard mask, subtract the subnet mask from 255.255.255.255. The following table lists some examples of this calculation.
+e.g
+Subtract from	255.255.255.255
+Subnet mask	255.255.0.0
+Wildcard mask	0.0.255.255
+
+-------------------------------------
+Example
+For /29 => 255.255.255.248
+
+Subtract from	255.255.255.255
+wildcard mask is 0.0.0.7
+---------------------------------------
+[Router 1]
+interface s2/0
+ip address 10.10.12.1 255.255.255.248
+no shutdown
+
+interface s2/1
+ip address 10.10.13.1 255.255.255.248
+no shutdown
+
+router eigrp 19
+network 10.10.13.0 0.0.0.7
+network 10.10.12.0 0.0.0.7
+network 192.168.19.0 0.0.0.127
+network 192.168.19.128 0.0.0.63
+passive-interface f0/1
+no auto-summary
+
+[Router 2]
+interface s2/0
+ip address 10.10.12.2 255.255.255.248
+no shutdown
+
+interface s2/1
+ip address 10.10.23.1 255.255.255.248
+no shutdown
+
+router eigrp 19
+network 10.10.12.0 0.0.0.7
+network 10.10.23.0 0.0.0.7
+network 192.168.19.224 0.0.0.31
+no auto-summary
+
+[Router 3]
+interface s2/0
+ip address 10.10.13.2 255.255.255.248
+no shutdown
+
+interface s2/1
+ip address 10.10.23.2 255.255.255.248
+no shutdown
+
+router eigrp 19
+network 10.10.13.0 0.0.0.7
+network 10.10.23.0 0.0.0.7
+network 192.168.19.192 0.0.0.31
+no auto-summary
+
+[Nat Configuration]
+
+[R1]
+interface f0/0.10
+ip nat inside
+no shutdown
+
+interface f0/0.20
+ip nat inside
+no shutdown
+
+interface f0/1
+ip nat outside
+no shutdown
+
+[ACL and extended ACL]
+[Standard ACL]
+ip access-list standard NAT_ACL
+deny host 192.168.19.130
+permit 192.168.19.0 0.0.0.127
+permit 192.168.19.128 0.0.0.63
+do write
+exit
+
+ip nat inside source list NAT_ACL interface f0/1 overload
+
+[extended ACL]
+ip access-list extended BLOCK_PING
+deny icmp host 192.168.19.133 host 192.168.19.2 echo
+permit ip any any
+
+interface f0/0.20
+ip access-group BLOCK_PING in
+
+
+[Telnet server on unbuntu guest 1]
+service openbsd-inetd restart
+service openbsd-inetd start
+mount -t devpts devpts /dev/pts   [very important]
+ufw enable
+
+[Configure ufw to block traffic from subnet A]
+ufw deny from 192.168.19.0/25 to any port 23
+
+[SSH on routers]
+[R1]
+ip domain-name r1.com
+username admin privilege 15 secret admin
+crypto key generate rsa
+ip ssh version 2
+line vty 0 4 [number of allowable sessions simultaenously]
+login local
+transport input ssh
+do write
+
+---test---
+[from subnet A] 
+ssh -oKexAlgorithms=+diffie-hellman-group14-sha1 -oCiphers=aes128-cbc admin@192.168.19.129
+[from subnet B]
+ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 \
+    -o HostKeyAlgorithms=+ssh-rsa \
+    -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+    -o Ciphers=+aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc \
+    admin@192.168.19.1
+[from subnet C]
+
+[from subnet D]
+ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 \
+    -o HostKeyAlgorithms=+ssh-rsa \
+    -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+    -o Ciphers=+aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc \
+    admin@192.168.19.1
+
+[R2]
+ip domain-name r2.com
+username admin privilege 15 secret admin
+crypto key generate rsa
+ip ssh version 2
+line vty 0 4 [number of allowable sessions simultaenously]
+login local
+transport input ssh
+do write
+
+---test---
+[from subnet A] 
+ssh -oKexAlgorithms=+diffie-hellman-group14-sha1 -oCiphers=aes128-cbc admin@192.168.19.225
+[from subnet B]
+ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 \
+    -o HostKeyAlgorithms=+ssh-rsa \
+    -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+    -o Ciphers=+aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc \
+    admin@192.168.19.225
+[from subnet C]
+
+[from subnet D]
+ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 \
+    -o HostKeyAlgorithms=+ssh-rsa \
+    -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+    -o Ciphers=+aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc \
+    admin@192.168.19.225
+
+[R3]
+ip domain-name r3.com
+username admin privilege 15 secret admin
+crypto key generate rsa
+ip ssh version 2
+line vty 0 4 [number of allowable sessions simultaenously]
+login local
+transport input ssh
+do write
+
+---test---
+[from subnet A] 
+ssh -oKexAlgorithms=+diffie-hellman-group14-sha1 -oCiphers=aes128-cbc admin@192.168.19.193
+[from subnet B]
+ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 \
+    -o HostKeyAlgorithms=+ssh-rsa \
+    -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+    -o Ciphers=+aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc \
+    admin@192.168.19.193
+[from subnet C]
+
+[from subnet D]
+ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 \
+    -o HostKeyAlgorithms=+ssh-rsa \
+    -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+    -o Ciphers=+aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc \
+    admin@192.168.19.193

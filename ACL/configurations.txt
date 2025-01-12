@@ -1,0 +1,184 @@
+[R1]
+interface s0/1/0
+ip address 10.1.2.1 255.255.255.0
+no shutdown
+
+interface g0/0/0
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+
+[A]
+
+ip address 192.168.1.2 255.255.255.0
+gateway 192.168.1.1
+
+
+[R2]
+interface s0/1/1
+ip address 10.1.2.2 255.255.255.0
+no shutdown
+
+interface s0/1/0
+ip address 10.2.3.1 255.255.255.0
+no shutdown
+
+interface g0/0/0
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+
+[B]
+ip address 192.168.2.2 255.255.255.0
+gateway 192.168.2.1
+
+
+[R3]
+interface s0/1/1
+ip address 10.2.3.2 255.255.255.0
+no shutdown
+
+interface s0/1/0
+ip address 10.3.4.1 255.255.255.0
+no shutdown
+
+interface g0/0/0
+ip address 192.168.3.1 255.255.255.0
+no shutdown
+
+[C]
+ip address 192.168.3.2 255.255.255.0
+gateway 192.168.3.1
+
+[R4]
+interface s0/1/1
+ip address 10.3.4.2 255.255.255.0
+no shutdown
+
+
+interface s0/1/0
+ip address 10.4.5.1 255.255.255.0
+no shutdown
+
+interface g0/0/0
+ip address 192.168.4.1 255.255.255.0
+no shutdown
+
+[D]
+ip address 192.168.4.2 255.255.255.0
+gateway 192.168.4.1
+
+
+[R5]
+interface s0/1/1
+ip address 10.4.5.2 255.255.255.0
+no shutdown
+
+interface g0/0/1
+ip address 192.168.6.1 255.255.255.0
+no shutdown
+
+interface g0/0/0
+ip address 192.168.5.1 255.255.255.0
+no shutdown
+
+[F]
+ip address 192.168.6.2 255.255.255.0
+gateway 192.168.6.1
+
+[E]
+ip address 192.168.5.2 255.255.255.0
+gateway 192.168.5.1
+
+
+[Static routing]
+[R1]
+ip route 10.2.3.0 255.255.255.0 10.1.2.2 
+ip route 10.3.4.0 255.255.255.0 10.1.2.2
+ip route 10.4.5.0 255.255.255.0 10.1.2.2
+ip route 192.168.2.0 255.255.255.0 10.1.2.2
+ip route 192.168.3.0 255.255.255.0 10.1.2.2
+ip route 192.168.4.0 255.255.255.0 10.1.2.2
+ip route 192.168.5.0 255.255.255.0 10.1.2.2
+ip route 192.168.6.0 255.255.255.0 10.1.2.2
+
+[R2]
+ip route 10.3.4.0 255.255.255.0 10.2.3.2
+ip route 10.4.5.0 255.255.255.0 10.2.3.2
+ip route 192.168.1.0 255.255.255.0 10.1.2.1
+ip route 192.168.3.0 255.255.255.0 10.2.3.2
+ip route 192.168.4.0 255.255.255.0 10.2.3.2
+ip route 192.168.5.0 255.255.255.0 10.2.3.2
+ip route 192.168.6.0 255.255.255.0 10.2.3.2
+
+[R3]
+ip route 10.1.2.0 255.255.255.0 10.2.3.1
+ip route 10.4.5.0 255.255.255.0 10.3.4.2
+ip route 192.168.2.0 255.255.255.0 10.2.3.1
+ip route 192.168.1.0 255.255.255.0 10.2.3.1
+ip route 192.168.4.0 255.255.255.0 10.3.4.2
+ip route 192.168.5.0 255.255.255.0 10.3.4.2
+ip route 192.168.6.0 255.255.255.0 10.3.4.2
+
+[R4]
+ip route 10.2.3.0 255.255.255.0 10.3.4.1
+ip route 10.1.2.0 255.255.255.0 10.2.3.1
+ip route 192.168.2.0 255.255.255.0 10.3.4.1
+ip route 192.168.3.0 255.255.255.0 10.3.4.1
+Ip route 192.168.1.0 255.255.255.0 10.3.4.1
+ip route 192.168.5.0 255.255.255.0 10.4.5.2
+ip route 192.168.6.0 255.255.255.0 10.4.5.2
+
+[R5]
+ip route 10.3.4.0 255.255.255.0 10.4.5.1
+ip route 10.2.3.0 255.255.255.0 10.3.4.1
+ip route 10.1.2.0 255.255.255.0 10.2.3.1
+ip route 192.168.2.0 255.255.255.0 10.4.5.1
+ip route 192.168.1.0 255.255.255.0 10.4.5.1
+ip route 192.168.4.0 255.255.255.0 10.4.5.1
+ip route 192.168.3.0 255.255.255.0 10.4.5.1
+
+
+[ACL configurations]
+Requirememnts
+
+A can ping B,C,D,E but not F
+
+B can ping E, but not C,D and F
+
+C can ping every PCs.
+
+D can ping F, but not E
+
+E can ping F 
+
+[requirement 1]
+------router 1----
+access-list 101 deny ip host 192.168.1.2 host 192.168.6.2
+access-list 101 permit ip any any
+
+interface g0/0/0
+ip access-group 101 in
+
+
+[requirement 2]
+------router 2----
+access-list 101 deny icmp host 192.168.2.2 host 192.168.3.2 echo
+access-list 101 deny icmp host 192.168.2.2 host 192.168.4.2 echo
+access-list 101 deny icmp host 192.168.2.2 host 192.168.6.2 echo
+access-list 101 permit ip any any
+
+interface g0/0/0
+ip access-group 101 in
+
+[requirement 3]
+
+C can ping everywhere
+
+[Requirement 4]
+-----------router 4----------------------
+access-list 101 deny icmp host 192.168.4.2 host 192.168.5.2 echo
+access-list 101 permit ip any any
+
+interface g0/0/0
+ip access-group 101 in
+
+[Requirement 5]
