@@ -1,3 +1,32 @@
+<style>
+  body {
+    background-color: #1e1e1e;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+  }
+  h1, h2 {
+    color: #32cd32;
+  }
+  a {
+    color: #00bfff;
+  }
+  .button {
+    background-color: #32cd32;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  .button:hover {
+    background-color: #00bfff;
+  }
+  .project-toggle {
+    display: none;
+  }
+</style>
 # 🛡️ Cybersecurity Portfolio
 
 ## 👋 About Me
