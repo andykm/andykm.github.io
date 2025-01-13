@@ -42,7 +42,7 @@ I aspire to become a **Cybersecurity Consultant**, focusing on audits, providing
 
 ## 🔍 Project Experience
 
-### 1. 🔒 Vulnerability Analysis
+### 1. 🔒 Vulnerability Scanner
 **Objective:** Perform network vulnerability scans and provide detailed analysis.  
 **Tools Used:** Shodan, Nmap, NIST, MITRE APIs.  
 **Methodology:**
@@ -51,11 +51,12 @@ I aspire to become a **Cybersecurity Consultant**, focusing on audits, providing
 
 ---
 
-### 2. 📊 Traffic Analysis and Machine Classification
+### 2. 📊 Traffic Analysis and Machine Learning Classification
 **Objective:** Classify malicious and benign traffic using machine learning techniques.  
 **Tools Used:** Kaggle dataset, Random Forest, MLP.  
 **Methodology:**
 - Utilized a Kaggle dataset of malicious and benign network traffic.
+- Perfomed data cleaning and pre-processing.
 - Applied **Random Forest** and **Multi-Layer Perceptron (MLP)** models to classify traffic.  
 
 **Outcome:** Achieved accurate classification of network traffic, contributing to enhanced intrusion detection.
@@ -69,7 +70,7 @@ My journey into **network security** includes mastering tools like Nmap, Scapy, 
 
 ### Challenges and Improvements
 Some topics remain challenging, such as:
-- 🖥️ Advanced scripting for automation & exploitation.
+- 🖥️ Advanced scripting for automation & Exploitation.
 
 To address these, I plan to engage in dedicated projects and advanced training to strengthen my expertise.
 
