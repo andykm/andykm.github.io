@@ -24,7 +24,7 @@ I aspire to become a **Cybersecurity Consultant**, focusing on audits, providing
 - **SIEM Solutions:** Splunk, LogRhythm, Microsoft Sentinel, Chronicle.
 - **PIM/PAM:** CyberArk, Wallix.
 - **IDS/IPS:** Snort, Cisco ASA (Firepower).
-- **Endpoint Security:** Cylance, SentinelOne, McAfee.
+- **Endpoint Security:** TrendMicro, SentinelOne, McAfee.
 - **Vulnerability Scanning:** Qualys, Nmap, Shodan.
 - **Applied Machine Learning & Data Mining.**
 - **Tools:** Wireshark, Scapy, Metasploit.
