@@ -1,63 +1,84 @@
-# About Me
+# 🛡️ Cybersecurity Portfolio
 
-## 🎓 Current Master's Student  
-I am currently pursuing a Master's degree in Cybersecurity with a focus on Networking at the Universiti of Malaya. My academic journey has provided me with a deep understanding of cybersecurity principles, complemented by hands-on expertise in networking and security operations.
+## 👋 About Me
+🎓 **Master’s Student in Cybersecurity**  
+I am currently pursuing a Master’s degree in Cybersecurity with a specialization in Networking at the **University of Malaya**. My academic journey combines theoretical knowledge with hands-on expertise in networking and security operations, preparing me to address complex challenges in the cybersecurity landscape.
 
-I am enhancing my knowledge in networking fundamentals, with a focus on routing, switching, and internetworking technologies. Leveraging platforms such as Cisco, Open vSwitch, GNS3, and Packet Tracer, I am building and analyzing complex network environments, complemented by the use of Virtual Machines for practical simulations.
+🛡️ **Professional Experience in SOC Operations**  
+As a former **Cybersecurity Analyst** at **Accenture (Mauritius)**, I developed a comprehensive skill set in:
+- 🔍 Monitoring and managing security events using **SIEM** solutions.
+- 🛠️ Detecting, qualifying, and managing security incidents efficiently.
+- ⚙️ Administering and configuring a range of security solutions.
+- 🖥️ Conducting detailed vulnerability assessments using **Shodan** and **Nmap**.
+- 📊 Leveraging APIs from **NIST** and **MITRE** for enriched vulnerability analysis.
+- 📝 Producing detailed reports, documenting incidents, and proposing corrective measures.
+- 📡 Staying current with the latest trends and technologies in cybersecurity.
 
-My learning journey extends into network security, where I am utilizing industry-standard tools like Nmap, Scapy, Shodan, Metasploit, and Wireshark for traffic analysis, vulnerability assessments, and threat detection. I am also exploring advanced security concepts, including ARP spoofing, DHCP starvation attacks, and the application of Machine Learning in Intrusion Detection Systems
-
----
-
-## 🛡️ Professional Experience in SOC Operations  
-With some experience in Security Operations Center (SOC) environments, I have developed a comprehensive skill set in the following areas:  
-- Monitoring and managing security events on customer and internal platforms through SIEM solutions.  
-- Detecting, qualifying, alerting, and managing security incidents efficiently.  
-- Installing, configuring, and administering a wide range of security solutions.  
-- Building detailed reports and performing appropriate documentation.  
-- Proposing corrective measures and industry-related best practices.  
-- Staying up-to-date with the latest security news, trends, and technologies.
-
----
-
-## 🔧 Expertise in Security Solutions  
-I possess hands-on expertise with a broad spectrum of cybersecurity tools and technologies:
-
-### ➤ **SIEM Solutions**  
-- LogRhythm, Splunk, Alert Logic, Rapid7 InsightIDR, Microsoft Sentinel, Chronicle
-
-### ➤ **SOAR**  
-- Siemplify  
-
-### ➤ **IPS**  
-- Cisco ASA (Firepower), CheckPoint  
-
-### ➤ **WAF**  
-- Rohde & Schwarz, Imperva, AWS  
-
-### ➤ **PIM & PAM**  
-- CyberArk, Wallix  
-
-### ➤ **Antivirus & EDR**  
-- Cylance, Symantec, Kaspersky, SentinelOne, McAfee  
-
-### ➤ **MDR & XDR**  
-- Trend Micro Deep Security, Cloud One, Vision One
-
-### ➤ **Vulnerability Scanners**  
-- Qualys  
+🌟 **Career Objective**  
+I aspire to become a **Cybersecurity Consultant**, focusing on audits, providing innovative solutions, and ensuring the security and integrity of systems.
 
 ---
 
-## 🌟 Goals  
-I am committed to continuously learning and advancing my skills in cybersecurity to tackle emerging challenges in the ever-evolving digital landscape. My passion lies in ensuring the security and integrity of systems while contributing to a safer online ecosystem.
+## 💻 Technical Skills
+- **Programming & Scripting:** Bash, Python, JavaScript (HTML & CSS), R, Java.
+- **Networking:** TCP/IP, OSI Model, Routing & Switching, Network Infrastructure.
+- **SIEM Solutions:** Splunk, LogRhythm, Microsoft Sentinel, Chronicle.
+- **PIM/PAM:** CyberArk, Wallix.
+- **IDS/IPS:** Snort, Cisco ASA (Firepower).
+- **Endpoint Security:** Cylance, SentinelOne, McAfee.
+- **Vulnerability Scanning:** Qualys, Nmap, Shodan.
+- **Applied Machine Learning & Data Mining.**
+- **Tools:** Wireshark, Scapy, Metasploit.
+- **Other Areas:** Linux & Windows Administration, Security Operations & Monitoring, Incident Response, Threat & Vulnerability Management.
 
 ---
 
-📂 **Current Projects**  
+## 🎓 Certifications and Training
+- ✅ **CompTIA Security+**  
+- ✅ **CompTIA CySA+**  
+- ✅ **Casugol CSAD** - Cyber Security Attack / Defend Strategist  
+
+---
+
+## 🔍 Project Experience
+
+### 1. 🔒 Vulnerability Analysis
+**Objective:** Perform network vulnerability scans and provide detailed analysis.  
+**Tools Used:** Shodan, Nmap, NIST, MITRE APIs.  
+**Methodology:**
+- Conducted scans to identify vulnerabilities within network environments.
+- Integrated results with **NIST** and **MITRE** APIs for in-depth vulnerability details and risk assessment.
+
+---
+
+### 2. 📊 Traffic Analysis and Machine Classification
+**Objective:** Classify malicious and benign traffic using machine learning techniques.  
+**Tools Used:** Kaggle dataset, Random Forest, MLP.  
+**Methodology:**
+- Utilized a Kaggle dataset of malicious and benign network traffic.
+- Applied **Random Forest** and **Multi-Layer Perceptron (MLP)** models to classify traffic.  
+
+**Outcome:** Achieved accurate classification of network traffic, contributing to enhanced intrusion detection.
+
+---
+
+## 📚 Learning Journey
+I am continuously enhancing my understanding of **networking fundamentals**, focusing on technologies such as Cisco, Open vSwitch, GNS3, and Packet Tracer. Practical simulations using **Virtual Machines** have allowed me to analyze complex network environments.
+
+My journey into **network security** includes mastering tools like Nmap, Scapy, Shodan, Metasploit, and Wireshark for traffic analysis and vulnerability assessments. I’ve explored advanced security concepts such as **ARP spoofing**, **DHCP starvation attacks**, and integrating **machine learning** into Intrusion Detection Systems.
+
+### Challenges and Improvements
+Some topics remain challenging, such as:
+- 🖥️ Advanced scripting for automation & exploitation.
+
+To address these, I plan to engage in dedicated projects and advanced training to strengthen my expertise.
+
+---
+
+## 📞 Contact Information
+- **LinkedIn:** [Connect with me](www.linkedin.com/in/andy-ng-86403a250)
+
+---
+
+## 🌐 GitHub Pages
 Please visit my [GitHub repository](https://github.com/andykm/andykm.github.io) to explore my current projects in cybersecurity and networking.
-
----
-
-📫 **Let's Connect**  
-Feel free to reach out for collaborations, networking, or discussing exciting cybersecurity challenges!
