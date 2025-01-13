@@ -81,5 +81,5 @@ To address these, I plan to engage in dedicated projects and advanced training t
 
 ---
 
-## 🌐 GitHub Pages
+## 🌐 GitHub Repository
 Please visit my [GitHub repository](https://github.com/andykm/andykm.github.io) to explore my current projects in cybersecurity and networking.
