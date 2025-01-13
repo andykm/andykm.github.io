@@ -77,7 +77,7 @@ To address these, I plan to engage in dedicated projects and advanced training t
 ---
 
 ## 📞 Contact Information
-- **LinkedIn:** [Connect with me](www.linkedin.com/in/andy-ng-86403a250)
+- **LinkedIn:** www.linkedin.com/in/andy-ng-86403a250
 
 ---
 
