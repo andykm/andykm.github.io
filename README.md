@@ -9,8 +9,7 @@ As a former **Cybersecurity Analyst** at **Accenture (Mauritius)**, I developed 
 - 🔍 Monitoring and managing security events using **SIEM** solutions.
 - 🛠️ Detecting, qualifying, and managing security incidents efficiently.
 - ⚙️ Administering and configuring a range of security solutions.
-- 🖥️ Conducting detailed vulnerability assessments using **Shodan** and **Nmap**.
-- 📊 Leveraging APIs from **NIST** and **MITRE** for enriched vulnerability analysis.
+- 🖥️ Conducting detailed vulnerability assessments.
 - 📝 Producing detailed reports, documenting incidents, and proposing corrective measures.
 - 📡 Staying current with the latest trends and technologies in cybersecurity.
 
