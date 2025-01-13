@@ -36,7 +36,7 @@ I aspire to become a **Cybersecurity Consultant**, focusing on audits, providing
 - ✅ **CompTIA Security+**  
 - ✅ **CompTIA CySA+**  
 - ✅ **Casugol CSAD** - Cyber Security Attack / Defend Strategist
-- ✅ **Microsfot** - AZ-900 and SC- 900 
+- ✅ **Microsoft** - AZ-900 and SC- 900 
 
 ---
 
