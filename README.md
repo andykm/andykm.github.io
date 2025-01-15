@@ -7,7 +7,7 @@ I am currently pursuing a Master’s degree in Cybersecurity with a specializati
 🛡️ **Professional Experience in SOC Operations**  
 As a former **Cybersecurity Analyst** at **Accenture (Mauritius)**, I developed a comprehensive skill set in:
 - Monitoring and managing security events using **SIEM** solutions.
-- 🛠Detecting, qualifying, and managing security incidents efficiently.
+- Detecting, qualifying, and managing security incidents efficiently.
 - Administering and configuring a range of security solutions.
 - Conducting detailed vulnerability assessments.
 - Producing detailed reports, documenting incidents, and proposing corrective measures.
