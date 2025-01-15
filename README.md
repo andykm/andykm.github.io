@@ -6,12 +6,12 @@ I am currently pursuing a Master’s degree in Cybersecurity with a specializati
 
 🛡️ **Professional Experience in SOC Operations**  
 As a former **Cybersecurity Analyst** at **Accenture (Mauritius)**, I developed a comprehensive skill set in:
-- 🔍 Monitoring and managing security events using **SIEM** solutions.
-- 🛠️ Detecting, qualifying, and managing security incidents efficiently.
-- ⚙️ Administering and configuring a range of security solutions.
-- 🖥️ Conducting detailed vulnerability assessments.
-- 📝 Producing detailed reports, documenting incidents, and proposing corrective measures.
-- 📡 Staying current with the latest trends and technologies in cybersecurity.
+- Monitoring and managing security events using **SIEM** solutions.
+- 🛠Detecting, qualifying, and managing security incidents efficiently.
+- Administering and configuring a range of security solutions.
+- Conducting detailed vulnerability assessments.
+- Producing detailed reports, documenting incidents, and proposing corrective measures.
+- Staying current with the latest trends and technologies in cybersecurity.
 
 🌟 **Career Objective**  
 I aspire to become a **Cybersecurity Consultant**, focusing on audits, providing innovative solutions, and ensuring the security and integrity of systems.
@@ -42,7 +42,7 @@ I aspire to become a **Cybersecurity Consultant**, focusing on audits, providing
 
 ## 🔍 Project Experience
 
-### 1. 🔒 Vulnerability Scanner
+### 1.  Vulnerability Scanner
 **Objective:** Perform network vulnerability scans and provide detailed analysis.  
 **Tools Used:** Shodan, Nmap, NIST, MITRE APIs.  
 **Methodology:**
@@ -51,7 +51,7 @@ I aspire to become a **Cybersecurity Consultant**, focusing on audits, providing
 
 ---
 
-### 2. 📊 Traffic Analysis and Machine Learning Classification
+### 2.  Traffic Analysis and Machine Learning Classification
 **Objective:** Classify malicious and benign traffic using machine learning techniques.  
 **Tools Used:** Kaggle dataset, Random Forest, MLP.  
 **Methodology:**
@@ -70,7 +70,7 @@ My journey into **network security** includes mastering tools like Nmap, Scapy, 
 
 ### Challenges and Improvements
 Some topics remain challenging, such as:
-- 🖥️ Advanced scripting for automation & Exploitation.
+-  Advanced scripting for automation & Exploitation.
 
 To address these, I plan to engage in dedicated projects and advanced training to strengthen my expertise.
 
